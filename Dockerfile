@@ -14,24 +14,23 @@ RUN apk add --no-cache libc6-compat ca-certificates tzdata
 ENV TZ=Asia/Shanghai
 WORKDIR /app
 
-# 1. 拷贝二进制文件
+# 1. 拷贝二进制
 COPY --from=builder /app/easydarwin /app/easydarwin
 
-# 2. 【核心优化】直接搬运仓库里真实的 configs 目录
-# 这一步会自动把你的 key.pem, cert.pem, config.toml 全部带进去
+# 2. 拷贝配置文件
 RUN mkdir -p /app/configs
 COPY configs/ /app/configs/
 
-# 3. 【配置对齐】把配置改名为 easydarwin.toml，放满所有可能的位置
-# 确保程序无论怎么找都能撞上你那份带 MySQL 地址的配置
-RUN cp /app/configs/config.toml /app/easydarwin.toml && \
-    cp /app/configs/config.toml /app/config.toml && \
-    cp /app/configs/config.toml /app/configs/easydarwin.toml
+# 3. 【核心新增】拷贝前端网页文件夹
+# 这一步非常重要，没有它就没有后台界面
+COPY web/ /app/web/ 
 
-# 4. 权限检查
-RUN chmod +x easydarwin
+# 4. 配置对齐（双重保险）
+RUN cp /app/configs/config.toml /app/easydarwin.toml && \
+    cp /app/configs/config.toml /app/config.toml
 
 EXPOSE 10086 10035 10054 10010/udp
+RUN chmod +x easydarwin
 
-# 5. 【最后通牒】强制指定配置文件路径启动
+# 5. 启动
 ENTRYPOINT ["/app/easydarwin", "-conf", "/app/easydarwin.toml"]
