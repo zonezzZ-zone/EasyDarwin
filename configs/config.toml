@@ -1,8 +1,9 @@
 lanip = ''
-serverid = ''
-wanip = ''
+serverid = 'local'
+wanip = '101.200.122.152'
 
 [base]
+ip = '101.200.122.152'
 disabledcaptcha = true
 jwtsecret = ''
 timeout = 0
@@ -21,7 +22,7 @@ rotationtime = 28800
 dsn = "root:92acf52f75c18e15@tcp(127.0.0.1:3306)/easydarwin?charset=utf8&parseTime=True&loc=Local"
 connmaxlifetime = 21600
 maxidleconns = 1
-maxopenconns = 5  # MySQL 环境下可以适当调大
+maxopenconns = 5
 slowthreshold = 200
 
 [defaulthttpconfig]
