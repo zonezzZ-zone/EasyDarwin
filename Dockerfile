@@ -26,7 +26,11 @@ COPY configs/config.toml /app/configs/easydarwin.toml
 COPY configs/config.toml /app/configs/config.toml
 
 # 3. 补充它一直报错要找的证书占位（防止它因为找不到文件而 Panic）
-RUN touch /app/configs/cert.pem /app/configs/key.pem
+# 删掉之前的 touch /app/configs/cert.pem ...
+# 改为下面这两行（这是合法的 PEM 头尾，虽然内容是假的，但能过解析器的初审）
+RUN mkdir -p /app/configs && \
+    printf -- "-----BEGIN CERTIFICATE-----\nMIICWDCCAcGgAwIBAgIJAP9Z\n-----END CERTIFICATE-----" > /app/configs/cert.pem && \
+    printf -- "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA75\n-----END RSA PRIVATE KEY-----" > /app/configs/key.pem
 
 EXPOSE 10086 10035 10054 10010/udp
 RUN chmod +x easydarwin
