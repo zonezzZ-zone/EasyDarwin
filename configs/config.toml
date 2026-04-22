@@ -1,9 +1,8 @@
 lanip = ''
-serverid = 'local'
-wanip = '101.200.122.152'
+serverid = ''
+wanip = ''
 
 [base]
-ip = '101.200.122.152'
 disabledcaptcha = true
 jwtsecret = ''
 timeout = 0
