@@ -66,6 +66,8 @@ enable = true
 
 [httpflvconfig]
 enable = true
+# 如果支持，开启播放鉴权
+authenable = true
 enablehttps = false
 urlpattern = '/'
 
