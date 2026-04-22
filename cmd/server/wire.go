@@ -7,6 +7,7 @@ import (
 	"easydarwin/internal/web/api"
 	"fmt"
 	"net/http"
+	"strings" // 必须引入
 )
 
 func wireApp(cfg *conf.Bootstrap) (http.Handler, error) {
@@ -15,12 +16,13 @@ func wireApp(cfg *conf.Bootstrap) (http.Handler, error) {
 		return nil, err
 	}
 
-	// 消除 sqlite 空闲页，防止数据库过大
-	db.Exec("VACUUM;")
+	// 核心修正：仅当配置中不含 @tcp（即非 MySQL）时才执行 SQLite 专属的 VACUUM 命令
+	if !strings.Contains(cfg.Data.Dsn, "@tcp") {
+		db.Exec("VACUUM;")
+	}
 
 	liveStreamcore := api.NewLiveStream(db)
 	api.NewUserCore(db)
-
 	api.NewVodCore(db)
 
 	source.InitDb(liveStreamcore)
